@@ -14,6 +14,16 @@ const tournamentSchema = new mongoose.Schema({
         minlength: [3, 'El juego requiere al menos 4 caracteres'],
         trim: true
     },
+    date: {
+      start: {
+        day: { type: String },
+        month: { type: String }
+      },
+      end: {
+        day: { type: String },
+        month: { type: String }
+      }
+    }
 }, {
   timestamps: true,
   toJSON: {

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 function arrayLimit(val) {
-    return val.length >= 4 && val.length <= 6
+    return val.length >= 5 && val.length <= 6
   }
 
 const teamSchema = new mongoose.Schema({
@@ -9,7 +9,7 @@ const teamSchema = new mongoose.Schema({
         type: [{
           type: mongoose.Schema.Types.ObjectId, ref: 'User',
         }],
-        validate: [arrayLimit, 'El número de jugadores debe ser entre 4 y 6']  
+        validate: [arrayLimit, 'El número de jugadores debe ser entre 5 y 6']  
     },
     teamName: {
         type: String,
@@ -19,6 +19,10 @@ const teamSchema = new mongoose.Schema({
     },
     tournament: {
       type: mongoose.Schema.Types.ObjectId, ref: 'Tournament'
+    },
+    logo: {
+      type: String,
+      default: 'https://www.seekpng.com/png/detail/28-289657_espn-soccer-team-logo-default.png'
     }
 }, {
   timestamps: true,

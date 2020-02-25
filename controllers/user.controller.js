@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const User = require('../models/user.model')
 
 module.exports.create = (req, res, next) => {
+  console.log(req.body)
   const user = new User({
     name: req.body.name,
     surname: req.body.surname,
@@ -59,13 +60,16 @@ module.exports.logout = (req, res, next) => {
 };
 
 module.exports.users = (req, res, next) => {
-  User.find({
-    uplayNick: req.body.uplayNick
-    })
+  User.find()
     .populate('team')
-    .then(user => {
-      if (user) {
-        res.json(user)
+    .then(users => {
+      if (users) {
+        
+        const findAny = str =>
+        users.filter(user => user.uplayNick.toLowerCase().includes(str.toLowerCase()))
+
+        res.json(findAny(req.body.uplayNick))
+        
       } else {
         throw createError(404, 'user not found');
       }

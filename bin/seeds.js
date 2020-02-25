@@ -1,8 +1,30 @@
-const mongoose = require('mongoose');
-//const Model1 = require('../models/model1.model');
-//const Model2 = require('../models/model2.model');
+require('../config/db.config')
 
-const dbtitle = 'base-api';
-mongoose.connect(`mongodb://localhost/${dbtitle}`);
-//Model1.collection.drop();
-//Model2.collection.drop();
+const User = require('../models/user.model')
+const faker = require('faker')
+
+Promise.all([
+  User.deleteMany(),
+])
+    .then(() => {
+        for (let i = 0; i < 80; i++) {
+            const user = new User({
+                name: faker.name.firstName(),
+                surname: faker.name.lastName(),
+                username: faker.internet.userName(),
+                uplayNick: faker.internet.userName(),
+                discordNick: faker.internet.userName(),
+                email: faker.internet.email(),
+                password: '12341234',
+                avatar: faker.image.avatar(),
+                dni: faker.random.number(),
+                age:faker.random.number()
+            })
+            user.save()
+            .then(user => {
+              console.log(user.username)
+            })
+            .catch(console.error)
+        }
+
+    })

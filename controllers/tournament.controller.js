@@ -6,36 +6,51 @@ const Tournament = require('../models/tournament.model')
 const Bracket = require('../models/bracket.model')
 const Groups = require('../models/groups.model')
 
-module.exports.createInscription = (req, res, next) => {
+module.exports.createTeam = (req, res, next) => {
+    console.log(req.body)
     User.find({
-            email: req.body.members
+            uplayNick: JSON.parse(req.body.members)
+        })
+        .populate('team')
+        .then(users => {
+            return users.map(user => {
+                console.log('USER ID1 => ', user.id)
+                return user.id
+                // const team = user.team[0] || null
+                // if(team) {
+                //     console.log('TIENE EQUIPO')
+                //     throw createError(404, `${user.uplayNick} ya tiene asignado un equipo`)
+                // }
+                // else {
+                //     console.log('NO TIENE EQUIPO')
+                //     return user.id
+                // }
+            })
         })
         .then(users => {
-            console.log(req.body.members)
-            return users.map(user => user.id)
-        })
-        .then(users => {
+            console.log('USERS ID => ', users)
             const team = new Team({
                 teamName: req.body.teamName,
                 members: users,
-                tournament: req.body.tournament
+                logo: req.body.logo
             })
 
             team.save()
                 .then((team) => {
-
-                    // users.map(user => {
-                    //     User.findByIdAndUpdate( user,  { team: team.id })
-                    //     .then(user => console.log(user))
-                    //     .catch(next)
-                    // })
-
                     res.status(201).json(team)
                 })
         })
         .catch(next)
+};
 
-
+module.exports.createInscription = (req, res, next) => {
+    Team.findOneAndUpdate({ teamName: req.body.name, tournament: req.body.tournament }, { new: true })
+        .populate('members tournament')
+        .then(team => {
+            console.log(team)
+            res.json(team)
+        })
+        .catch(next)
 };
 
 module.exports.teams = (req, res, next) => {
@@ -46,9 +61,9 @@ module.exports.teams = (req, res, next) => {
             path: 'members'
         })
         .populate('tournament')
-        .then(team => {
-            if (team) {
-                res.json(team)
+        .then(teams => {
+            if (teams) {
+                res.json(teams)
             } else {
                 throw createError(404, 'team not found');
             }
@@ -103,7 +118,17 @@ module.exports.tournament = (req, res, next) => {
 module.exports.createTournament = (req, res, next) => {
     const tournament = new Tournament({
         name: req.body.name,
-        game: req.body.game
+        game: req.body.game,
+        date: {
+            start: {
+                day: req.body.startDay,
+                month: req.body.startMonth,
+            },
+            end: {
+                day: req.body.endDay,
+                month: req.body.endMonth,
+            }
+        }
     })
 
     tournament.save()
@@ -113,11 +138,12 @@ module.exports.createTournament = (req, res, next) => {
 };
 
 module.exports.updateTournament = (req, res, next) => {
-
+    console.log(req.body)
     Tournament.findByIdAndUpdate(req.params.id, req.body, {
             new: true
         })
         .then(tournament => {
+            
             res.json(tournament)
         })
         .catch(next)
@@ -212,7 +238,6 @@ module.exports.groups = (req, res, next) => {
         })
         .populate('tournament groupA.team1 groupA.team2 groupA.team3 groupA.team4 groupA.team5 groupB.team1 groupB.team2 groupB.team3 groupB.team4 groupB.team5 groupC.team1 groupC.team2 groupC.team3 groupC.team4 groupC.team5 groupD.team1 groupD.team2 groupD.team3 groupD.team4 groupD.team5')
         .then(groups => {
-            console.log(groups)
             if (groups) {
                 res.json(groups)
             } else {
