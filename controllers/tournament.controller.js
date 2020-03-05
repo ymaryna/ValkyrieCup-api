@@ -5,6 +5,7 @@ const Team = require('../models/team.model')
 const Tournament = require('../models/tournament.model')
 const Bracket = require('../models/bracket.model')
 const Groups = require('../models/groups.model')
+const Match = require('../models/match.model')
 
 module.exports.createTeam = (req, res, next) => {
     console.log(req.body)
@@ -14,7 +15,6 @@ module.exports.createTeam = (req, res, next) => {
         .populate('team')
         .then(users => {
             return users.map(user => {
-                console.log('USER ID1 => ', user.id)
                 return user.id
                 // const team = user.team[0] || null
                 // if(team) {
@@ -32,13 +32,17 @@ module.exports.createTeam = (req, res, next) => {
             const team = new Team({
                 teamName: req.body.teamName,
                 members: users,
-                logo: req.body.logo
+                tournament: '5e415fa22438ab04dba2c3e9',
+                logo: req.file ? req.file.url : undefined,
             })
 
             team.save()
                 .then((team) => {
                     res.status(201).json(team)
                 })
+                .catch(error =>
+                    console.info('Some error happens => ', error.message) ||
+                    res.status(400).json({message: error.message}))
         })
         .catch(next)
 };
@@ -55,7 +59,7 @@ module.exports.createInscription = (req, res, next) => {
 
 module.exports.teams = (req, res, next) => {
     Team.find({
-            tournament: req.body.tournamentId
+            tournament: req.params.id
         })
         .populate({
             path: 'members'
@@ -89,6 +93,16 @@ module.exports.team = (req, res, next) => {
         })
         .catch(next)
         
+};
+
+module.exports.deleteTeam = (req, res, next) => {
+    Team.deleteMany({
+            _id: req.params.id
+        })
+        .then(deleted => {
+            console.log(deleted)
+        })
+        .catch(next)
 };
 
 module.exports.updateTeam = (req, res, next) => {
@@ -149,13 +163,78 @@ module.exports.updateTournament = (req, res, next) => {
         .catch(next)
 };
 
-module.exports.createBracket = (req, res, next) => {
-    const bracket = new Bracket({
+module.exports.createMatch = (req, res, next) => {
+    const match = new Match({
         tournament: req.body.tournament,
         team1: req.body.team1,
         team2: req.body.team2,
         date: req.body.date,
         hour: req.body.hour
+    })
+    console.log(match)
+    match.save()
+        .then(match => {
+            res.status(201).json(match)
+        })
+};
+
+module.exports.match = (req, res, next) => {
+    Match.findOne({
+            _id: req.params.id
+        })
+        .populate('tournament team1 team2 winner')
+        .then(match => {
+            if (match) {
+                res.json(match)
+            } else {
+                throw createError(404, 'match not found');
+            }
+        })
+        .catch(next)
+};
+
+module.exports.deleteMatch = (req, res, next) => {
+    Match.deleteMany({
+            _id: req.params.id
+        })
+        .then(deleted => {
+            console.log(deleted)
+        })
+        .catch(next)
+};
+
+module.exports.matches = (req, res, next) => {
+    Match.find({
+            tournament: req.params.id
+        })
+        .populate('tournament team1 team2 winner')
+        .then(match => {
+            if (match) {
+                res.json(match)
+            } else {
+                throw createError(404, 'match not found');
+            }
+        })
+        .catch(next)
+};
+
+module.exports.updateMatch = (req, res, next) => {
+    Match.findOneAndUpdate(req.params.id, req.body, {
+        new: true
+    })
+    .then(match => {
+        res.json(match)
+    })
+    .catch(next)
+};
+
+module.exports.createBracket = (req, res, next) => {
+    const bracket = new Bracket({
+        tournament: req.body.tournament,
+        eighths: req.body.eighths,
+        quarters: req.body.quarters,
+        semis: req.body.semis,
+        final: req.body.final
     })
     console.log(bracket)
     bracket.save()
@@ -168,7 +247,13 @@ module.exports.bracket = (req, res, next) => {
     Bracket.findOne({
             _id: req.params.id
         })
-        .populate('tournament team1 team2 winner')
+        .populate({
+            path: 'eighths tournament quarters semis final',
+            populate: {
+                path: 'team1 team2'
+            }
+        })
+        // .populate('tournament eighths quarters semis final')
         .then(bracket => {
             if (bracket) {
                 res.json(bracket)
@@ -189,40 +274,12 @@ module.exports.updateBracket = (req, res, next) => {
     .catch(next)
 };
 
-
-
-
-
 module.exports.createGroups = (req, res, next) => {
     const groups = new Groups({
-        groupA: {
-            team1: req.body.groupA.team1a,
-            team2: req.body.groupA.team2a,
-            team3: req.body.groupA.team3a,
-            team4: req.body.groupA.team4a,
-            team5: req.body.groupA.team5a,
-        },
-        groupB: {
-            team1: req.body.groupB.team1b,
-            team2: req.body.groupB.team2b,
-            team3: req.body.groupB.team3b,
-            team4: req.body.groupB.team4b,
-            team5: req.body.groupB.team5b,
-        },
-        groupC: {
-            team1: req.body.groupC.team1c,
-            team2: req.body.groupC.team2c,
-            team3: req.body.groupC.team3c,
-            team4: req.body.groupC.team4c,
-            team5: req.body.groupC.team5c,
-        },
-        groupD: {
-            team1: req.body.groupD.team1d,
-            team2: req.body.groupD.team2d,
-            team3: req.body.groupD.team3d,
-            team4: req.body.groupD.team4d,
-            team5: req.body.groupD.team5d,
-        },
+        groupA: req.body.groupA,
+        groupB: req.body.groupB,
+        groupC: req.body.groupC,
+        groupD: req.body.groupD,
         date: req.body.date,
         tournament: req.body.tournament
     })
@@ -236,10 +293,16 @@ module.exports.groups = (req, res, next) => {
     Groups.findOne({
             _id: req.params.id
         })
-        .populate('tournament groupA.team1 groupA.team2 groupA.team3 groupA.team4 groupA.team5 groupB.team1 groupB.team2 groupB.team3 groupB.team4 groupB.team5 groupC.team1 groupC.team2 groupC.team3 groupC.team4 groupC.team5 groupD.team1 groupD.team2 groupD.team3 groupD.team4 groupD.team5')
+        .populate('tournament groupA groupB groupC groupD')
         .then(groups => {
             if (groups) {
-                res.json(groups)
+                const { groupA, groupB, groupC, groupD, date, tournament } = groups
+                res.json({
+                    groups: [
+                        groupA, groupB, groupC, groupD
+                    ],
+                    tournament, date
+                })
             } else {
                 throw createError(404, 'groups not found');
             }

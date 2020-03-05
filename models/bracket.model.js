@@ -5,23 +5,24 @@ const bracketSchema = new mongoose.Schema({
     tournament: {
         type: mongoose.Schema.Types.ObjectId, ref: 'Tournament' 
     },
-    team1: {
-        type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
+    eighths: {
+        type: [{
+            type: mongoose.Schema.Types.ObjectId, ref: 'Match',
+          }],
     },
-    team2: {
-        type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
+    quarters: {
+        type: [{
+            type: mongoose.Schema.Types.ObjectId, ref: 'Match',
+          }],
     },
-    winner: {
-        type: mongoose.Schema.Types.ObjectId, ref: 'Team'
+    semis: {
+        type: [{
+            type: mongoose.Schema.Types.ObjectId, ref: 'Match',
+          }],
     },
-    date: {
-        type: String , 
-        required: true,
+    final: {
+        type: mongoose.Schema.Types.ObjectId, ref: 'Match',
     },
-    hour: {
-        type: String,
-        required: true,
-    }
     //fecha y hora y con eso relacionamos partidos
 }, {
   timestamps: true,

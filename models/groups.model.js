@@ -1,105 +1,97 @@
 const mongoose = require('mongoose');
 
 const groupsSchema = new mongoose.Schema({
-    groupA: {
-        team1: {
+    groupA: [
+        {
             type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
         },
-        team2: {
+        {
             type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
         },
-        team3: {
+        {
             type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
         },
-        team4: {
+        {
             type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
         },
-        team5: {
+        {
             type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
         },
-        winnersA: {
-            team1: {
-                type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
-            },
-            team2: {
-                type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
-            }
-        }
+    ],
+    groupB: [
+        {
+            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
+        },
+        {
+            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
+        },
+        {
+            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
+        },
+        {
+            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
+        },
+        {
+            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
+        },
+    ],
+    groupC: [
+        {
+            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
+        },
+        {
+            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
+        },
+        {
+            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
+        },
+        {
+            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
+        },
+        {
+            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
+        },
+    ],
+    groupD: [
+        {
+            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
+        },
+        {
+            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
+        },
+        {
+            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
+        },
+        {
+            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
+        },
+        {
+            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
+        },
+    ],
+    winnerA_team1: {
+        type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
     },
-    groupB: {
-        team1: {
-            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
-        },
-        team2: {
-            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
-        },
-        team3: {
-            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
-        },
-        team4: {
-            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
-        },
-        team5: {
-            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
-        },
-        winnersB: {
-            team1: {
-                type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
-            },
-            team2: {
-                type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
-            }
-        }
+    winnerA_team2: {
+        type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
     },
-    groupC: {
-        team1: {
-            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
-        },
-        team2: {
-            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
-        },
-        team3: {
-            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
-        },
-        team4: {
-            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
-        },
-        team5: {
-            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
-        },
-        winnersC: {
-            team1: {
-                type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
-            },
-            team2: {
-                type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
-            }
-        }
+    winnerB_team1: {
+        type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
     },
-    groupD: {
-        team1: {
-            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
-        },
-        team2: {
-            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
-        },
-        team3: {
-            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
-        },
-        team4: {
-            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
-        },
-        team5: {
-            type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
-        },
-        winnersD: {
-            team1: {
-                type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
-            },
-            team2: {
-                type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
-            }
-        }
+    winnerB_team2: {
+        type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
+    },
+    winnerC_team1: {
+        type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
+    },
+    winnerC_team2: {
+        type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
+    },
+    winnerD_team1: {
+        type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
+    },
+    winnerD_team2: {
+        type: mongoose.Schema.Types.ObjectId, ref: 'Team' 
     },
     date: {
         type: String

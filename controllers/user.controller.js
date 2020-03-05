@@ -81,7 +81,12 @@ module.exports.user = (req, res, next) => {
   User.findOne({
       _id: req.params.id
     })
-    .populate('team')
+    .populate({
+      path : 'team',
+      populate : {
+        path : 'members'
+      }
+    })
     .then(user => {
       if (user) {
         res.json(user)

@@ -70,6 +70,10 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: true
   },
+  admin: {
+    type: Boolean,
+    default: false
+  },
   social: {
     google: String,
     facebook: String,
